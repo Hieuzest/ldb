@@ -11,6 +11,7 @@
 #define SIZE 9
 #define FIND 10
 #define HELP 11
+#define GETX 12
 
 #define HISTORY_FILE ".ldb_history"
 
@@ -31,7 +32,8 @@ vector<ldb::cDef> ldb::cmds = {
   { JSON,  "json",  "j",   "try to format values as json <n>" },
   { SIZE,  "size",  "s",   "determine the size of the current range (in bytes)" },
   { FIND,  "find",  "in",  "execute an expression against the current range" },
-  { HELP,  "help",  "?",   "print this list of REPL commands" }
+  { HELP,  "help",  "?",   "print this list of REPL commands" },
+  { GETX,  "getx",  "gx",  "get a key in xattr form"}
 };
 
 //
@@ -120,6 +122,11 @@ void ldb::startREPL() {
     switch (cmd.id) {
       case GET: {
         ldb::get_value(cmd.rest);
+        break;
+      }
+
+      case GETX: {
+        ldb::getx_value(cmd.rest);
         break;
       }
 

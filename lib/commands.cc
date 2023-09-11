@@ -1,5 +1,6 @@
 #include "../ldb.h"
-
+#include <glusterfs/dict.h>
+#include <glusterfs/iatt.h>
 //
 //
 //
@@ -39,6 +40,36 @@ void ldb::get_value(string key) {
     }
 
     cout << value << endl;
+  }
+}
+
+int bf_iatt_dump(struct iatt *ia) {
+    cout << "gfid: " << uuid_utoa(ia->ia_gfid) << endl;
+    cout << "ia_flags: " << ia->ia_flags << endl;
+    cout << "ia_ino/dev/rdev: " << ia->ia_ino << " " << ia->ia_dev << " " ia->ia_rdev << endl;
+    cout << "ia_nlink/blksize/blocks: " << ia->ia_nlink << " " << ia->ia_blksize << " " << ia->ia_blocks << endl;
+    cout << "ia_type: " << ia->ia_type << endl;
+    cout << "ia_a/m/c/b: " << ia->ia_atime << " " << ia->ia_mtime << " " << ia->ia_ctime << " " << ia->ia_btime << endl;
+}
+
+
+void ldb::getx_value(string key) {
+  if (key == "") return;
+
+  string value;
+  leveldb::Status status = db->Get(leveldb::ReadOptions(), key, &value);
+  dict_t *dict;
+  struct iatt stbuf = {
+      0,
+  };
+
+  if (!status.ok()) {
+    cerr << "Not Found: [" << COLOR_BLUE << key << COLOR_NONE << "]" << endl;
+  } else {
+    dict = dict_new();
+    dict_unserialize(value, value.length(), &dict);
+    dict_get_iatt(dict, "iatt", &stbuf);
+    bf_iatt_dump(&stbuf);
   }
 }
 

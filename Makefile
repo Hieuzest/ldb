@@ -35,7 +35,7 @@ leveldb: $(LEVELDBPATH)
 	cmake --build $(LEVELDBBUILD)
 
 $(BIN): $(DEPS) $(LIBPATH)/*.cc deps/docopt
-	$(CXX) -o $(BIN) $(SRC) $(CXXFLAGS) -lpthread -L/usr/local/lib $(LIBLEVELDB) $(DEPS) -lsnappy
+	$(CXX) -o $(BIN) $(SRC) $(CXXFLAGS) -lpthread -L/usr/local/lib $(LIBLEVELDB) $(DEPS) -lsnappy -lglusterfs
 
 deps/snappy:
 	git clone --depth 1 https://github.com/heapwolf/snappy ./deps/snappy
